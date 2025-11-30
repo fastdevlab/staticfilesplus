@@ -9,7 +9,14 @@ $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
 
 $modx->loadClass('transport.modPackageBuilder', '', false, true);
-$builder = new modPackageBuilder($modx);
+
+// Если класс не найден в глобальной области, используем полный путь MODX 3
+if (!class_exists('modPackageBuilder')) {
+    /** @var \MODX\Revolution\Transport\modPackageBuilder $builder */
+    $builder = new \MODX\Revolution\Transport\modPackageBuilder($modx);
+} else {
+    $builder = new modPackageBuilder($modx);
+}
 
 // Имя пакета
 $builder->createPackage('StaticFilesPlus', '1.0.0', 'pl');
@@ -20,7 +27,7 @@ $plugin = $modx->newObject('modPlugin');
 $plugin->set('id', 1);
 $plugin->set('name', 'StaticFilesPlus');
 $plugin->set('description', 'Automatically creates static files for Elements organized by categories.');
-$plugin->set('plugincode', file_get_contents(dirname(dirname(__FILE__)) ) . '/core/components/staticfilesplus/elements/plugins/staticfilesplus.php');
+$plugin->set('plugincode', file_get_contents(dirname(dirname(__FILE__)) . '/core/components/staticfilesplus/elements/plugins/staticfilesplus.php'));
 $plugin->set('category', 0);
 
 // ВАЖНО: Мы НЕ добавляем $plugin->addMany($events) здесь, 
