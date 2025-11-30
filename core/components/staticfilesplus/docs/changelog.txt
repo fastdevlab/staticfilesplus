@@ -1,1 +1,6 @@
-1.0.0 - Initial release.
+StaticFilesPlus 1.0.0-pl
+------------------------
+- Initial release.
+- Added dynamic event selection during installation (Setup Options).
+- Added Russian category transliteration support.
+- Added check for 'pdotools_elements_path'.
