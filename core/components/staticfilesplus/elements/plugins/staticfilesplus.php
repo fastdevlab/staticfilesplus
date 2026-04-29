@@ -15,7 +15,7 @@ $eventName = $modx->event->name;
 
 $events = [
     'OnBeforeChunkFormSave'  => ['type' => 'chunks',    'extension' => 'tpl'],
-    'OnBeforeTempFormSave'   => ['type' => 'templates', 'extension' => 'tpl'],
+    'OnBeforeTempFormSave'   => ['type' => 'templates', 'extension' => 'tpl', 'name' => 'templatename'],
     'OnBeforeSnipFormSave'   => ['type' => 'snippets',  'extension' => 'php'],
     'OnBeforePluginFormSave' => ['type' => 'plugins',   'extension' => 'php'],
 ];
@@ -43,7 +43,7 @@ switch ($eventName) {
         break;
 }
 
-if (!$element) {
+if (!$element || $element->get('static')) {
     return;
 }
 
@@ -130,10 +130,13 @@ if (!file_exists($fullPath)) {
 // 4. Формируем имя файла и пишем содержимое
 // ---------------------------------------------------------------------
 
-$elementName = $element->get('name');
+$elementName = $element->get($config['name'] ?: 'name');
 if (empty($elementName)) {
     return;
 }
+$elementName = $modx->filterPathSegment($elementName);
+$elementName = str_replace([' ', '-'], '_', $elementName);
+$elementName = strtolower($elementName);
 
 $fileName = $elementName . '.' . $config['extension'];
 $filePath = $fullPath . $fileName;
